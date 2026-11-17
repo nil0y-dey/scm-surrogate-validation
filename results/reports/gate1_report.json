@@ -1,0 +1,127 @@
+[
+  {
+    "status": "PASS",
+    "check": "same settings + seed => identical daily_records.csv",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "days 0..99 identical before the disruption starts",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "days >= 100 differ (the disruption has an effect)",
+    "detail": ""
+  },
+  {
+    "status": "NOTE",
+    "check": "fill rate over disruption + 60 days",
+    "detail": "undisrupted 1.000 vs disrupted 0.688"
+  },
+  {
+    "status": "PASS",
+    "check": "demand identical: base vs disrupt",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "demand identical: base vs lean",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "demand identical: base vs buffered",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "demand identical: base vs pipe3",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "demand identical: base vs d_lean",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "demand identical: base vs d_buffered",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "demand identical: base vs d_pipe3",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "demand intensity (demand_signals.npy) identical across runs",
+    "detail": ""
+  },
+  {
+    "status": "NOTE",
+    "check": "lead-time draws are NOT paired across policies",
+    "detail": "by design of the simulator: lead times use a separate random stream that is only consumed when a node reorders, so different policies see different lead-time draws. Demand (the larger source of noise) is paired; say this in the paper."
+  },
+  {
+    "status": "NOTE",
+    "check": "in calm weather every policy serves ~100% of demand",
+    "detail": "buffered (ss_scale=1.5) calm fill rate = 1.0000; policies can only be told apart under disruption"
+  },
+  {
+    "status": "PASS",
+    "check": "d_lean gives a different outcome from the default policy under disruption",
+    "detail": "fill rate 0.6595 vs default 0.6879"
+  },
+  {
+    "status": "PASS",
+    "check": "d_buffered gives a different outcome from the default policy under disruption",
+    "detail": "fill rate 0.6908 vs default 0.6879"
+  },
+  {
+    "status": "PASS",
+    "check": "d_pipe3 gives a different outcome from the default policy under disruption",
+    "detail": "fill rate 0.6016 vs default 0.6879"
+  },
+  {
+    "status": "PASS",
+    "check": "capacity reset called once per day (60 calls, expected 60)",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "factor == 0.5 exactly on days [20, 30) and 1.0 elsewhere",
+    "detail": ""
+  },
+  {
+    "status": "NOTE",
+    "check": "day 19",
+    "detail": "factor applied = 1.0"
+  },
+  {
+    "status": "NOTE",
+    "check": "day 20",
+    "detail": "factor applied = 0.5"
+  },
+  {
+    "status": "NOTE",
+    "check": "day 29",
+    "detail": "factor applied = 0.5"
+  },
+  {
+    "status": "NOTE",
+    "check": "day 30",
+    "detail": "factor applied = 1.0"
+  },
+  {
+    "status": "PASS",
+    "check": "every edge's real container volume matches the factor, every day",
+    "detail": ""
+  },
+  {
+    "status": "PASS",
+    "check": "duration=0 is a no-op even with capacity_scale=0.3",
+    "detail": ""
+  }
+]
