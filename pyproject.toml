@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scmval"
+version = "0.1.0"
+description = "Decision-regret validation of ML surrogates of supply-chain simulators under disruption"
+requires-python = ">=3.9"
+dependencies = ["numpy", "pandas", "scipy", "matplotlib"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
