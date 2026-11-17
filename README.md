@@ -45,14 +45,14 @@ git commit -m "Pin patched ISOMORPH simulator as submodule"
 ```
 Then create an EMPTY repository on GitHub (no README) and:
 ```
-git remote add origin https://github.com/<your-username>/scm-surrogate-validation.git
+git remote add origin https://github.com/.git
 git push -u origin main
 ```
 
 ## Using it on Colab
 
 ```
-!git clone --recurse-submodules https://github.com/<your-username>/scm-surrogate-validation.git
+!git clone --recurse-submodules https://github.com/nil0y-dey/scm-surrogate-validation.git
 %cd scm-surrogate-validation
 !pip install -q -e .
 ```
