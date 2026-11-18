@@ -1,0 +1,3 @@
+[submodule "third_party/ISOMORPH_Hmod"]
+	path = third_party/ISOMORPH_Hmod
+	url = https://github.com/nil0y-dey/ISOMORPH_Hmod.git
