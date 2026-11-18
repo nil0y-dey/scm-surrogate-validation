@@ -1,0 +1,20 @@
+# big, regenerable simulator output (keep it out of git; see README)
+data/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# intermediate pickles and archives
+*.pkl
+*.zip
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
