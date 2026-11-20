@@ -32,3 +32,12 @@ def grid(ss_scales=None, pipeline_mults=None):
 
 def label(ss_scale: float, pipeline_mult: float) -> str:
     return f"ss{ss_scale:g}_pm{pipeline_mult:g}"
+
+
+# Gate 3 (calm, 3 seeds, 500 days): these lose >1% of demand with NO disruption.
+NOT_VIABLE = {(0.25, 3.0), (0.25, 5.0), (0.25, 7.0), (0.25, 10.0), (0.5, 3.0)}
+
+
+def viable_grid():
+    """The grid without the Gate-3 non-viable policies (20 of 25)."""
+    return [p for p in grid() if p not in NOT_VIABLE]

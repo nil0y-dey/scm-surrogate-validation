@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from scmval.metrics import (CAPACITY_RATIO, fit_scale, fluid_ttr_raw, settle_day,
-                            window_metrics)
+from scmval.metrics import (CAPACITY_RATIO, bh_reject, fit_scale, fluid_ttr_raw,
+                            paired_test, settle_day, window_metrics)
 
 
 def test_settle_day_finds_the_end_of_a_transient():
@@ -66,3 +66,25 @@ def test_settle_day_is_noise_aware():
     aware = settle_day(s, steady, tol=0.005, noise_sd=sd, noise_k=3.0)
     assert aware <= flat
     assert aware < 50
+
+
+def test_bh_rejects_all_when_all_small():
+    assert bh_reject([0.01, 0.04, 0.03, 0.005], q=0.05).all()
+
+
+def test_bh_rejects_only_the_clear_one():
+    assert list(bh_reject([0.005, 0.2, 0.3], q=0.05)) == [True, False, False]
+
+
+def test_paired_test_edge_cases():
+    a = np.array([1.0, 2.0, 3.0])
+    assert paired_test(a, a) == (0.0, 0.0, 1.0)
+    m, sd, p = paired_test(a + 5, a)
+    assert m == 5.0 and sd == 0.0 and p == 0.0
+
+
+def test_paired_test_detects_a_real_shift():
+    rng = np.random.default_rng(1)
+    base = rng.normal(10, 1, 30)
+    m, sd, p = paired_test(base + 1.0 + rng.normal(0, 0.2, 30), base)
+    assert m > 0.8 and p < 1e-6

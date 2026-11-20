@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 from scmval.recovery import RECOVERY_HOLD, RECOVERY_TOL, first_sustained_recovery
 
@@ -92,3 +93,28 @@ def fit_scale(pred, obs):
     ss_tot = float(((obs - obs.mean()) ** 2).sum())
     r2 = 1.0 - ss_res / ss_tot if ss_tot > 0 else float("nan")
     return k, r2
+
+
+def bh_reject(pvals, q: float = 0.10):
+    """Benjamini-Hochberg: True where a hypothesis is rejected, FDR <= q."""
+    p = np.asarray(pvals, float)
+    m = len(p)
+    order = np.argsort(p)
+    ok = np.nonzero(p[order] <= q * (np.arange(1, m + 1) / m))[0]
+    reject = np.zeros(m, bool)
+    if len(ok):
+        reject[order[: ok.max() + 1]] = True
+    return reject
+
+
+def paired_test(a, b):
+    """Paired comparison on the same seeds. Returns (mean a-b, SD of differences,
+    two-sided p). Identical vectors -> p=1; constant non-zero shift -> p=0."""
+    d = np.asarray(a, float) - np.asarray(b, float)
+    n = len(d)
+    mean = float(d.mean())
+    sd = float(d.std(ddof=1)) if n > 1 else 0.0
+    if sd == 0.0:
+        return mean, 0.0, (1.0 if mean == 0.0 else 0.0)
+    t = mean / (sd / np.sqrt(n))
+    return mean, sd, float(2 * stats.t.sf(abs(t), n - 1))

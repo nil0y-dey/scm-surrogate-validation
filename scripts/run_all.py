@@ -73,6 +73,7 @@ def main():
              "--duration", "20", "--days", "160", "--seeds", "2"])
         run([py, str(HERE / "05_gate3_policy_warmup.py"), "--quick"])
         run([py, str(HERE / "06_gate4_mapping_scan.py"), "--quick"])
+        run([py, str(HERE / "07_gate56_policy_power.py"), "--quick"])
         print("\n--quick does not include stability_boundary.py "
               "(it needs long horizons to be meaningful at all -- run "
               "it directly, at full scale, when you want it).")
@@ -82,6 +83,7 @@ def main():
         run([py, str(HERE / "04_severity_calibration.py")])
         run([py, str(HERE / "05_gate3_policy_warmup.py")])
         run([py, str(HERE / "06_gate4_mapping_scan.py")])
+        run([py, str(HERE / "07_gate56_policy_power.py")])
 
     print("\nAll requested steps completed.")
 
