@@ -1,0 +1,78 @@
+{
+  "settings": {
+    "days": 500,
+    "seeds": [
+      2025,
+      2026,
+      2027
+    ],
+    "viable_min_calm_fill": 0.99,
+    "settle_tol": 0.01,
+    "settle_noise_k": 3.0,
+    "warmup_margin": 100,
+    "quick": false
+  },
+  "n_policies": 25,
+  "n_viable": 20,
+  "marginal": [
+    {
+      "ss_scale": 0.25,
+      "pipeline_mult": 14.0,
+      "steady_fill": 0.9956723820595187
+    },
+    {
+      "ss_scale": 0.5,
+      "pipeline_mult": 5.0,
+      "steady_fill": 0.9942459291326143
+    },
+    {
+      "ss_scale": 0.75,
+      "pipeline_mult": 3.0,
+      "steady_fill": 0.9927661627546602
+    },
+    {
+      "ss_scale": 0.75,
+      "pipeline_mult": 5.0,
+      "steady_fill": 0.9983685494729377
+    },
+    {
+      "ss_scale": 1.0,
+      "pipeline_mult": 3.0,
+      "steady_fill": 0.9973477453546554
+    }
+  ],
+  "not_viable": [
+    {
+      "ss_scale": 0.25,
+      "pipeline_mult": 3.0,
+      "steady_fill": 0.7170450703673049
+    },
+    {
+      "ss_scale": 0.25,
+      "pipeline_mult": 5.0,
+      "steady_fill": 0.8184427886925221
+    },
+    {
+      "ss_scale": 0.25,
+      "pipeline_mult": 7.0,
+      "steady_fill": 0.8794180322206705
+    },
+    {
+      "ss_scale": 0.25,
+      "pipeline_mult": 10.0,
+      "steady_fill": 0.9659345964837385
+    },
+    {
+      "ss_scale": 0.5,
+      "pipeline_mult": 3.0,
+      "steady_fill": 0.9742288246316051
+    }
+  ],
+  "max_settle_day_viable": 53,
+  "checks": [
+    {
+      "status": "PASS",
+      "message": "slowest viable policy settles by day 53 (ss_scale=0.25, pipeline_mult=14); current warm-up margin = 100"
+    }
+  ]
+}

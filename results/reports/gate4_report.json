@@ -1,0 +1,39 @@
+{
+  "settings": {
+    "days": 500,
+    "seeds": [
+      2025,
+      2026,
+      2027
+    ],
+    "t0": 100,
+    "slope": 0.75,
+    "L_candidates": [
+      300,
+      400,
+      500
+    ],
+    "headline_L": 300,
+    "quick": false
+  },
+  "fluid_model": {
+    "k": 1.074234139066675,
+    "r2": 0.9472632291028178,
+    "n": 63,
+    "censoring_agreement": "30/30"
+  },
+  "checks": [
+    {
+      "status": "PASS",
+      "message": "no-disruption control loses 0.000 full-service days (limit 0.5)"
+    },
+    {
+      "status": "PASS",
+      "message": "resilience triangle is monotone in severity and in duration (within 0.25 days of noise)"
+    },
+    {
+      "status": "WARN",
+      "message": "Mild training band (sigma<=0.2, D<=30): most service lost in any cell = 0.00 days of demand (want >= 1.0); training data will look almost like calm weather"
+    }
+  ]
+}
