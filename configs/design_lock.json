@@ -1,0 +1,257 @@
+{
+  "locked_checks": [
+    "Gate 1 integrity",
+    "Gate 3 policy viability / warm-up",
+    "Gate 4 severity mapping",
+    "Gates 5/6 training signal and policy power",
+    "Surrogate learnability",
+    "Pipeline dry runs"
+  ],
+  "warnings_carried": [
+    "Gate 4 severity mapping: Mild training band (sigma<=0.2, D<=30): most service lost in any cell = 0.00 days of demand (want >= 1.0); training data will look almost like calm weather  [SUPERSEDED: severity was re-indexed to overload nu; Gates 5/6 confirm the new Mild band carries signal]"
+  ],
+  "fingerprint": {
+    "design.py": "7ed44da7209c04dc",
+    "policies.py": "7689a47a6b43ae7f",
+    "metrics.py": "161a652fa5f6c8a5",
+    "analysis.py": "a31ba6e5553d56e1"
+  },
+  "design": {
+    "T0": 100,
+    "run_length": 400,
+    "durations": {
+      "short": 14,
+      "medium": 30,
+      "long": 90
+    },
+    "nu_bands": {
+      "mild": [
+        0.0,
+        0.15
+      ],
+      "moderate": [
+        0.15,
+        0.35
+      ],
+      "severe": [
+        0.35,
+        0.55
+      ],
+      "extreme": [
+        0.55,
+        0.68
+      ]
+    },
+    "train_band": "mild",
+    "train_durations": [
+      14,
+      30
+    ],
+    "delta_fill": 0.005,
+    "delta_unmet_days": 1.5,
+    "min_decidable_frac_eval": 0.3,
+    "sensitivity_train_nu_max": 0.25,
+    "calm_only_ablation": true,
+    "seed_ranges": {
+      "pilot": [
+        2025,
+        2999
+      ],
+      "training": [
+        10000,
+        19999
+      ],
+      "calibration": [
+        20000,
+        29999
+      ],
+      "test": [
+        30000,
+        39999
+      ],
+      "placebo": [
+        40000,
+        49999
+      ]
+    },
+    "bh_q": 0.1
+  },
+  "policies": [
+    [
+      0.25,
+      14.0
+    ],
+    [
+      0.5,
+      5.0
+    ],
+    [
+      0.5,
+      7.0
+    ],
+    [
+      0.5,
+      10.0
+    ],
+    [
+      0.5,
+      14.0
+    ],
+    [
+      0.75,
+      3.0
+    ],
+    [
+      0.75,
+      5.0
+    ],
+    [
+      0.75,
+      7.0
+    ],
+    [
+      0.75,
+      10.0
+    ],
+    [
+      0.75,
+      14.0
+    ],
+    [
+      1.0,
+      3.0
+    ],
+    [
+      1.0,
+      5.0
+    ],
+    [
+      1.0,
+      7.0
+    ],
+    [
+      1.0,
+      10.0
+    ],
+    [
+      1.0,
+      14.0
+    ],
+    [
+      1.5,
+      3.0
+    ],
+    [
+      1.5,
+      5.0
+    ],
+    [
+      1.5,
+      7.0
+    ],
+    [
+      1.5,
+      10.0
+    ],
+    [
+      1.5,
+      14.0
+    ]
+  ],
+  "data_plan": {
+    "test_nus": [
+      0.05,
+      0.1,
+      0.15,
+      0.25,
+      0.45,
+      0.6
+    ],
+    "test_durations": [
+      14,
+      30,
+      90
+    ],
+    "n_train": 2500,
+    "n_calibration": 600,
+    "n_calm": 500,
+    "n_wide": 800,
+    "test_seeds_first": 15,
+    "test_seeds_max": 30,
+    "placebo_cells": [
+      [
+        0.15,
+        30
+      ],
+      [
+        0.15,
+        90
+      ],
+      [
+        0.45,
+        30
+      ],
+      [
+        0.45,
+        90
+      ]
+    ],
+    "placebo_seeds": 15
+  },
+  "budget": {
+    "sec_per_run": 16.0,
+    "workers": 2,
+    "blocks": {
+      "tier1_train": {
+        "runs": 2500,
+        "cpu_hours": 11.1,
+        "wall_hours": 5.6
+      },
+      "tier1_calibration": {
+        "runs": 600,
+        "cpu_hours": 2.7,
+        "wall_hours": 1.3
+      },
+      "tier1_test_first_pass": {
+        "runs": 5400,
+        "cpu_hours": 24.0,
+        "wall_hours": 12.0
+      },
+      "tier2_calm_ablation": {
+        "runs": 500,
+        "cpu_hours": 2.2,
+        "wall_hours": 1.1
+      },
+      "tier2_wide_band": {
+        "runs": 800,
+        "cpu_hours": 3.6,
+        "wall_hours": 1.8
+      },
+      "tier2_placebo": {
+        "runs": 1200,
+        "cpu_hours": 5.3,
+        "wall_hours": 2.7
+      },
+      "tier3_deepening_max": {
+        "runs": 5400,
+        "cpu_hours": 24.0,
+        "wall_hours": 12.0
+      },
+      "tier1_total": {
+        "runs": 8500,
+        "cpu_hours": 37.8,
+        "wall_hours": 18.9
+      },
+      "tier2_total": {
+        "runs": 2500,
+        "cpu_hours": 11.1,
+        "wall_hours": 5.6
+      },
+      "tier3_total": {
+        "runs": 5400,
+        "cpu_hours": 24.0,
+        "wall_hours": 12.0
+      }
+    }
+  }
+}
