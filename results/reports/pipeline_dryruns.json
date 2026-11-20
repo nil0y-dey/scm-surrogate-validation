@@ -1,0 +1,95 @@
+{
+  "settings": {
+    "reps": 200,
+    "delta": 1.5,
+    "q": 0.1
+  },
+  "report": {
+    "D1": {
+      "families": 3600,
+      "share_with_any_significant_pair": 0.07888888888888888,
+      "share_with_any_decidable_pair": 0.028333333333333332
+    },
+    "D2_D3": [
+      {
+        "seeds": 5,
+        "placebo_flips": 148,
+        "placebo_decidable": 53990,
+        "placebo_flip_rate": 0.0027412483793295053,
+        "placebo_top1_flips": "5/29",
+        "planted_recall": 0.920416364714408,
+        "false_alarms": 52,
+        "near_margin_extra": 258,
+        "planted_found": 13971,
+        "planted_total": 15179
+      },
+      {
+        "seeds": 10,
+        "placebo_flips": 53,
+        "placebo_decidable": 55272,
+        "placebo_flip_rate": 0.0009588941959762628,
+        "placebo_top1_flips": "1/57",
+        "planted_recall": 0.9530184064873214,
+        "false_alarms": 16,
+        "near_margin_extra": 207,
+        "planted_found": 14808,
+        "planted_total": 15538
+      },
+      {
+        "seeds": 30,
+        "placebo_flips": 7,
+        "placebo_decidable": 55732,
+        "placebo_flip_rate": 0.00012560109093518983,
+        "placebo_top1_flips": "0/65",
+        "planted_recall": 0.9691424928275423,
+        "false_alarms": 4,
+        "near_margin_extra": 151,
+        "planted_found": 15201,
+        "planted_total": 15685
+      }
+    ],
+    "D4": {
+      "halfwidth": 12.906647052677215,
+      "coverage_in_distribution": 0.9013,
+      "coverage_shifted": 0.35615
+    }
+  },
+  "checks": [
+    {
+      "status": "PASS",
+      "message": "with no true effect, 7.9% of cells report a significant policy difference (promise: <= 10%, tolerance +2 points)"
+    },
+    {
+      "status": "PASS",
+      "message": "requiring the practical margin delta cuts that to 2.8%"
+    },
+    {
+      "status": "PASS",
+      "message": "placebo: 0.01% of decidable pairs flip against an independent repeat at 30 seeds (noise floor)"
+    },
+    {
+      "status": "PASS",
+      "message": "planted flips found at 30 seeds: 97% (want >= 90%)"
+    },
+    {
+      "status": "PASS",
+      "message": "false alarms at 30 seeds (reported flips on pairs whose true gap is under delta/2): 4 = 0.03% of reported flips (want <= 1%)"
+    },
+    {
+      "status": "NOTE",
+      "message": "616 extra flips sit on pairs whose true gap is between delta/2 and delta: the noisy estimate crossed the margin. They are not errors, but pairs near delta are inherently borderline"
+    },
+    {
+      "status": "NOTE",
+      "message": "recall at 5 / 10 / 30 seeds = 92% / 95% / 97% -- this is why the design asks for 30 seeds in test cells"
+    },
+    {
+      "status": "PASS",
+      "message": "in-distribution coverage = 90.1% (target 90% +- 2)"
+    },
+    {
+      "status": "PASS",
+      "message": "a surrogate with a known 2-SD bias is caught: coverage deficit 54 points"
+    }
+  ]
+}
