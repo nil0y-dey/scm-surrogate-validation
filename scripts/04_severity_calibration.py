@@ -78,7 +78,7 @@ def main():
                 disrupt_capacity_scale=cs,
                 disrupt_start_day=WARMUP,
                 disrupt_duration=args.duration,
-                shock_count_scale=0.0, burst_rate_scale=0.0,
+                shock_count_scale=0.0, burst_rate_scale=0.0, slim=True,
             ))
     print(f"\nRunning {len(configs)} simulations "
           f"({len(candidates)} candidates x {len(seeds)} seeds, "
@@ -103,8 +103,9 @@ def main():
         ttr = (recovered_day - restore_day) if recovered_day is not None else None
         censored = recovered_day is None
 
-        # Per-seed view (the study reports per-run recovery, not the
-        # ensemble mean, which recovers earlier than most single runs).
+        # Per-seed view. The study reports per-run recovery. (The ensemble
+        # mean is not a typical run: it waits for the slowest seed, so it
+        # recovers LATER than most single runs.)
         per_seed = []
         for d_ in dirs:
             sr = load_daily_series(d_)["fill_rate"]

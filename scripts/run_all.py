@@ -14,6 +14,10 @@ Budget section presents it:
                              finding (Figure: stability, companion note)
   5. severity_calibration -- pins the Moderate-band floor and
                              confirms/adjusts the run length L
+  6. gate3_policy_warmup  -- is every policy viable in calm weather, and
+                             does warm-up cover the slowest one?
+  7. gate4_mapping_scan   -- what each severity level really does; which
+                             (severity, duration) cells never recover
 
 Each script also runs standalone (see each file's docstring for its
 own CLI flags); this just sequences them with the settings used in
@@ -67,6 +71,8 @@ def main():
         run([py, str(HERE / "02_warmup_calibration.py"), "--days", "60", "--seeds", "2"])
         run([py, str(HERE / "04_severity_calibration.py"), "--candidates", "0.9,0.8",
              "--duration", "20", "--days", "160", "--seeds", "2"])
+        run([py, str(HERE / "05_gate3_policy_warmup.py"), "--quick"])
+        run([py, str(HERE / "06_gate4_mapping_scan.py"), "--quick"])
         print("\n--quick does not include stability_boundary.py "
               "(it needs long horizons to be meaningful at all -- run "
               "it directly, at full scale, when you want it).")
@@ -74,6 +80,8 @@ def main():
         run([py, str(HERE / "02_warmup_calibration.py")])
         run([py, str(HERE / "03_stability_boundary.py")])
         run([py, str(HERE / "04_severity_calibration.py")])
+        run([py, str(HERE / "05_gate3_policy_warmup.py")])
+        run([py, str(HERE / "06_gate4_mapping_scan.py")])
 
     print("\nAll requested steps completed.")
 

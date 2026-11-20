@@ -47,7 +47,7 @@ def build_configs(seeds, days):
             out_dir = os.path.join(OUT_ROOT, f"{regime}_seed{seed}")
             configs.append(RunConfig(
                 seed=seed, days=days, out_dir=out_dir,
-                scenario_name=f"{regime}_{seed}", **knobs,
+                scenario_name=f"{regime}_{seed}", slim=True, **knobs,
             ))
     return configs
 

@@ -54,6 +54,7 @@ REGIME_HORIZONS = {
 WARMUP_EXCLUDE = 50          # days dropped before fitting
 FLAT_VARIANCE_TOL = 1.0      # backlog std below this => classify as flat/stable directly
 WINDOW_TO_TAU_RATIO = 3.0    # required for a saturating fit to be trusted
+NEGLIGIBLE_FRAC = 0.1        # final backlog below this fraction of ONE day's demand counts as "drained"
 
 TARGET_RATIO = 1.20   # from simulator source: last-mile self-calibration target
 PACKING_EFF = 0.93    # from simulator source: packing efficiency divisor
@@ -77,12 +78,19 @@ def aic(rss, n, k):
     return n * np.log(rss / n) + 2 * k
 
 
-def classify_regime(t: np.ndarray, y: np.ndarray) -> dict:
+def classify_regime(t: np.ndarray, y: np.ndarray, scale: float = None) -> dict:
     """Fit saturating/linear/power-law models to a backlog trajectory
-    and classify convergence behaviour, with the two guards described
-    in the module docstring."""
+    and classify convergence behaviour, with the guards described in
+    the module docstring plus a third one: if `scale` (one day's mean
+    demand) is given and the backlog at the end of the window is below
+    NEGLIGIBLE_FRAC x scale, the system has drained its backlog and is
+    called stable. (Without this, a tiny early transient on top of a
+    near-zero backlog was mislabelled "linear".)"""
     if np.std(y) < FLAT_VARIANCE_TOL:
         return {"classification": "stable (flat, no AIC needed)",
+                "tau": None, "window_over_tau": None, "fits": {}}
+    if scale is not None and np.mean(y[-max(1, len(y) // 10):]) < NEGLIGIBLE_FRAC * scale:
+        return {"classification": "stable (backlog drains to negligible)",
                 "tau": None, "window_over_tau": None, "fits": {}}
 
     n = len(t)
@@ -143,7 +151,7 @@ def main():
             configs.append(RunConfig(
                 seed=seed, days=days, out_dir=out_dir,
                 scenario_name=f"cs_{cs}_{seed}", containers_scale=cs,
-                shock_count_scale=0.0, burst_rate_scale=0.0,
+                shock_count_scale=0.0, burst_rate_scale=0.0, slim=True,
             ))
     print(f"Running {len(configs)} simulations "
           f"({len(REGIME_HORIZONS)} containers_scale values x {len(seeds)} seeds)...")
@@ -162,7 +170,8 @@ def main():
         t = backlog.index.values.astype(float)
         y = backlog.values.astype(float)
         mask = t >= WARMUP_EXCLUDE
-        result = classify_regime(t[mask], y[mask])
+        demand_scale = float(np.mean([f["demand"].mean() for f in frames]))
+        result = classify_regime(t[mask], y[mask], scale=demand_scale)
         classifications[cs] = result
         ratio = TARGET_RATIO / PACKING_EFF * cs
         print(f"  containers_scale={cs:<6} (theoretical ratio={ratio:.3f}, "
