@@ -14,6 +14,6 @@ def test_learnability_runs_on_synthetic_table(tmp_path):
     csv = tmp_path / "t.csv"; pd.DataFrame(rows).to_csv(csv, index=False)
     root = pathlib.Path(__file__).resolve().parents[1]
     r = subprocess.run([sys.executable, str(root / "scripts" / "08_learnability.py"),
-                        "--csv", str(csv), "--tag", "test"], capture_output=True, text=True)
+                        "--csv", str(csv), "--tag", "test", "--outdir", str(tmp_path)], capture_output=True, text=True)
     assert r.returncode == 0, r.stderr[-800:]
     assert "LEARNABILITY" in r.stdout

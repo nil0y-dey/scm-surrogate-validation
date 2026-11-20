@@ -41,6 +41,7 @@ from __future__ import annotations
 import argparse
 import json
 import warnings
+from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
@@ -108,9 +109,11 @@ def main():
     ap.add_argument("--csv", default=str(paths.REPORT_DIR / "gate56_per_run.csv"))
     ap.add_argument("--policy-cols", default="ss,pm")
     ap.add_argument("--tag", default="B")
+    ap.add_argument("--outdir", default=str(paths.RESULTS_DIR), help="where reports/ and figures/ are written (tests use a temp folder)")
     a = ap.parse_args()
     pcols = a.policy_cols.split(",")
     paths.make_dirs()
+    out = Path(a.outdir); (out / "reports").mkdir(parents=True, exist_ok=True); (out / "figures").mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(a.csv)
     delta = design.delta_unmet_days()
     lo, hi = design.NU_BANDS[design.TRAIN_BAND]
@@ -157,7 +160,7 @@ def main():
                                    "inband_mean_spearman"]].round(3).to_string())
     base = t1.groupby("model")[["const_regret", "random_regret"]].mean().iloc[0]
     print(f"  constant-policy regret = {base.const_regret:.2f} days, random-advice regret = "
-          f"{base.random_regret:.2f} days (constant policy = {const})\n")
+          f"{base.random_regret:.2f} days (constant policy: safety-stock scale {const[0]:g}, pipeline multiplier {const[1]:g})\n")
 
     print("=== T2: outside the training band (the shift) -- mean regret in days, by severity band ===")
     piv = t2.pivot_table(index="model", columns="band", values="regret", aggfunc="mean")
@@ -198,10 +201,10 @@ def main():
     print(f"\nLEARNABILITY: {status} (WARN/NOTE lines are design flags, not errors).")
 
     t1.assign(test="in_band").pipe(lambda d: pd.concat([d, t2.assign(test="shift")])).to_csv(
-        paths.REPORT_DIR / f"learnability_{a.tag}_cells.csv", index=False)
+        out / "reports" / f"learnability_{a.tag}_cells.csv", index=False)
     json.dump({"tag": a.tag, "delta": delta, "constant_policy": [float(x) for x in const],
                "models": results, "checks": checks, "best_model": best},
-              open(paths.REPORT_DIR / f"learnability_{a.tag}.json", "w"), indent=2)
+              open(out / "reports" / f"learnability_{a.tag}.json", "w"), indent=2)
 
     fig, ax = plt.subplots(1, 2, figsize=(11, 4.2))
     for name, g in t2.groupby("model"):
@@ -215,9 +218,9 @@ def main():
         ax[1].plot(s.index, s.values, "o-", label=name)
     ax[1].set_xlabel("duration D (days)"); ax[1].set_ylabel("regret (days of demand)")
     for x in ax: x.grid(alpha=.3)
-    fig.tight_layout(); fig.savefig(paths.FIG_DIR / f"learnability_{a.tag}.png", dpi=200)
-    print(f"Saved: results/reports/learnability_{a.tag}.json, learnability_{a.tag}_cells.csv, "
-          f"results/figures/learnability_{a.tag}.png")
+    fig.tight_layout(); fig.savefig(out / "figures" / f"learnability_{a.tag}.png", dpi=200)
+    print(f"Saved in {out}: reports/learnability_{a.tag}.json, reports/learnability_{a.tag}_cells.csv, "
+          f"figures/learnability_{a.tag}.png")
 
 
 if __name__ == "__main__":

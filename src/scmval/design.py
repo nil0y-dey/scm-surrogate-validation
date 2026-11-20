@@ -23,6 +23,11 @@ NU_BANDS = {"mild": (0.00, 0.15), "moderate": (0.15, 0.35),
 TRAIN_BAND = "mild"
 TRAIN_DURATIONS = (14, 30)          # long events are test-only
 
+# Pre-specified analysis rules (fixed BEFORE any training/test data exist; pilot-informed values are noted).
+MIN_DECIDABLE_FRAC_EVAL = 0.30      # a test cell with fewer decidable policy pairs is reported but kept out of the headline flip tables
+SENSITIVITY_TRAIN_NU_MAX = 0.25     # wider-training-band sensitivity run (replaces the old sigma<=0.3 variant)
+ABLATION_CALM_ONLY = True           # also train a calm-only arm (nu = 0)
+
 DELTA_FILL = 0.005    # practical margin: 0.5 percentage points of fill rate
 
 # Non-overlapping seed ranges (pilots/gates used 2025-2029). Never reuse a
