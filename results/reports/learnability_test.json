@@ -1,0 +1,69 @@
+{
+  "tag": "test",
+  "delta": 1.5,
+  "constant_policy": [
+    1.0,
+    5.0
+  ],
+  "models": {
+    "ridge-quad": {
+      "inband_R2": 0.9507418193745043,
+      "inband_R2_ceiling": 0.9497267110961054,
+      "inband_RMSE_days": 0.3707303804975141,
+      "inband_mean_regret": 0.09410005343362678,
+      "inband_mean_spearman": 0.6666666666666666,
+      "shift_RMSE_days": 19.33745009487807,
+      "shift_mean_regret": 0.6950950859258694
+    },
+    "random-forest": {
+      "inband_R2": 0.9546639083850754,
+      "inband_R2_ceiling": 0.9497267110961054,
+      "inband_RMSE_days": 0.35566492015310786,
+      "inband_mean_regret": 0.14861695873820624,
+      "inband_mean_spearman": 0.6,
+      "shift_RMSE_days": 20.30477082570425,
+      "shift_mean_regret": 0.0664936871321616
+    },
+    "grad-boost": {
+      "inband_R2": 0.9495672138918119,
+      "inband_R2_ceiling": 0.9497267110961054,
+      "inband_RMSE_days": 0.3751245383321392,
+      "inband_mean_regret": 0.09410005343362678,
+      "inband_mean_spearman": 0.6666666666666666,
+      "shift_RMSE_days": 20.302260079674003,
+      "shift_mean_regret": 0.0664936871321616
+    },
+    "neural-net": {
+      "inband_R2": 0.9002031218188971,
+      "inband_R2_ceiling": 0.9497267110961054,
+      "inband_RMSE_days": 0.527688307818385,
+      "inband_mean_regret": 0.09410005343362678,
+      "inband_mean_spearman": 0.6999999999999998,
+      "shift_RMSE_days": 222.96910286880058,
+      "shift_mean_regret": 0.0664936871321616
+    }
+  },
+  "checks": [
+    {
+      "status": "PASS",
+      "message": "in the training band a surrogate predicts unmet demand on unseen seeds: best R^2 = 0.95; the ceiling set by seed-to-seed noise is 0.95 (want >= 90% of it)"
+    },
+    {
+      "status": "PASS",
+      "message": "in-band, the surrogate's chosen policy costs 0.09 days more than the best (delta = 1.50)"
+    },
+    {
+      "status": "NOTE",
+      "message": "in-band the best policy is almost the same in every cell (constant-policy regret 0.09 days), so the in-band task cannot separate surrogates from a fixed rule; the shift test below can"
+    },
+    {
+      "status": "NOTE",
+      "message": "headroom for failure: mean regret rises from 0.09 (in band) to 0.70 days (outside the band); surrogates do NOT clearly degrade under shift in this data: the paper's story becomes 'surrogates held up' -- still a valid result, but plan the contribution around it"
+    },
+    {
+      "status": "NOTE",
+      "message": "outside the band, 1 of 6 cells have surrogate regret above delta"
+    }
+  ],
+  "best_model": "ridge-quad"
+}
