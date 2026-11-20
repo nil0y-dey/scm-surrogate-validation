@@ -1,0 +1,32 @@
+{
+  "delta": 1.5,
+  "seeds": [
+    2025,
+    2026,
+    2027,
+    2028,
+    2029
+  ],
+  "checks": [
+    {
+      "status": "PASS",
+      "message": "Mild training cells: mean unmet demand ranges 1.07-11.13 days (want some cell >= 1.0); share of runs with any loss: 0.82-1.00"
+    },
+    {
+      "status": "PASS",
+      "message": "outcomes vary across policies/seeds inside the training band"
+    },
+    {
+      "status": "PASS",
+      "message": "median decidable-pair share over cells with real loss = 0.86 (want >= 0.3)"
+    },
+    {
+      "status": "PASS",
+      "message": "random-advice regret exceeds delta in 17 of 17 cells with real loss"
+    },
+    {
+      "status": "NOTE",
+      "message": "minimum detectable difference: median 1.82 days at 5 seeds, 0.74 days at 30 seeds (delta = 1.50)"
+    }
+  ]
+}
