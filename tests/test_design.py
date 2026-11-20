@@ -24,3 +24,11 @@ def test_seed_ranges_do_not_overlap():
 
 def test_viable_grid_drops_exactly_the_gate3_failures():
     assert len(grid()) == 25 and len(viable_grid()) == 20
+
+
+def test_run_plan_counts():
+    from scmval import design
+    p = design.run_plan(sec_per_run=10.0, workers=2)
+    assert p["tier1_test_first_pass"]["runs"] == 18 * 20 * 15
+    assert p["tier1_total"]["runs"] == 2500 + 600 + 5400
+    assert abs(p["tier1_train"]["cpu_hours"] - 2500 * 10 / 3600) < 0.06

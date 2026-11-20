@@ -49,3 +49,44 @@ def nu_from_capacity(c: float) -> float:
 def delta_unmet_days(length: int = RUN_LENGTH, t0: int = T0) -> float:
     """DELTA_FILL in the units of the unmet-demand metric (days of demand over [t0, length))."""
     return DELTA_FILL * (length - t0)
+
+
+# ---------------------------------------------------------------------------
+# Data plan for Simulator B (frozen at the design lock)
+# ---------------------------------------------------------------------------
+TEST_NUS = (0.05, 0.10, 0.15, 0.25, 0.45, 0.60)   # same grid as the Gate 5/6 pilot, so the pilot power numbers apply
+TEST_DURATIONS = (14, 30, 90)
+N_POLICIES = 20                                  # viable policies (Gate 3)
+TRAIN_NU_RANGE = (0.0, 0.15)                     # Latin-hypercube over (0, 0.15]
+N_TRAIN = 2500                                   # main training runs: nu in the Mild band, D in {14, 30}, policy and seed random
+N_CALIBRATION = 600                              # held-out runs from the SAME distribution, for conformal intervals
+N_CALM = 500                                     # ablation arm: calm-only training runs (nu = 0)
+N_WIDE = 800                                     # sensitivity arm: wider band, 0.15 < nu <= 0.25
+TEST_SEEDS_FIRST = 15                            # seeds per (cell, policy) in the first pass of the test grid
+TEST_SEEDS_MAX = 30                              # after adaptive deepening of near-margin cells
+PLACEBO_CELLS = ((0.15, 30), (0.15, 90), (0.45, 30), (0.45, 90))
+PLACEBO_SEEDS = 15
+SEC_PER_RUN_ESTIMATE = 400 / 7300 * 409.9        # seconds: released-baseline runtime scaled to L=400; replace with the measured value
+
+
+def run_plan(sec_per_run: float = SEC_PER_RUN_ESTIMATE, workers: int = 2) -> dict:
+    """Run counts and CPU/wall-clock hours for each block of the data plan."""
+    cells = len(TEST_NUS) * len(TEST_DURATIONS)
+    blocks = {
+        "tier1_train": N_TRAIN,
+        "tier1_calibration": N_CALIBRATION,
+        "tier1_test_first_pass": cells * N_POLICIES * TEST_SEEDS_FIRST,
+        "tier2_calm_ablation": N_CALM,
+        "tier2_wide_band": N_WIDE,
+        "tier2_placebo": len(PLACEBO_CELLS) * N_POLICIES * PLACEBO_SEEDS,
+        "tier3_deepening_max": cells * N_POLICIES * (TEST_SEEDS_MAX - TEST_SEEDS_FIRST),
+    }
+    out = {}
+    for k, n in blocks.items():
+        cpu = n * sec_per_run / 3600
+        out[k] = {"runs": n, "cpu_hours": round(cpu, 1), "wall_hours": round(cpu / workers, 1)}
+    for tier in ("tier1", "tier2", "tier3"):
+        n = sum(v["runs"] for k, v in out.items() if k.startswith(tier))
+        cpu = n * sec_per_run / 3600
+        out[tier + "_total"] = {"runs": n, "cpu_hours": round(cpu, 1), "wall_hours": round(cpu / workers, 1)}
+    return out
